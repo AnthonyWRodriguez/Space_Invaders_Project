@@ -1,0 +1,1305 @@
+<html>
+    <head>
+        <title>Space Invaders</title>
+        <style>
+            canvas{
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Space Invaders</h1>
+        <h2>Level: <span id='score'/></h2>
+        <canvas id="TheCanvas" width="1000" height="400" tabindex="0"/>
+        <script>
+
+            window.onload = function(){
+                var canvas = document.getElementById("TheCanvas");
+                
+                var ctx = canvas.getContext("2d");
+
+                const canv_wid=1000;
+                const canv_hei=400;
+                const wid=25;
+                const hei=25;
+                const allX=[50, 125, 200, 275, 350, 425, 500];
+                const allY=[250, 200, 150, 100, 50];
+
+
+                const OGPlayer={
+                    x:((canv_wid/2)-(wid/2)),
+                    y:(canv_hei - 2*hei),
+                    w:wid,
+                    h:hei,
+                    level:1,
+                    dir:0,
+                    lazer: true
+                }
+
+                var Player={
+                    x:((canv_wid/2)-(wid/2)),
+                    y:(canv_hei - 2*hei),
+                    w:wid,
+                    h:hei,
+                    level:1,
+                    dir:0,
+                    lazer: true
+                }
+
+                var lazer={
+                    x:0,
+                    y:0,
+                    w:2,
+                    h:10
+                }
+
+                const OGallEnemies=[
+                    [
+                        {
+                            x:allX[0],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[0],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[0],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[0],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[0],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//1
+                    [
+                        {
+                            x:allX[1],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[1],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[1],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[1],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[1],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//2
+                    [
+                        {
+                            x:allX[2],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[2],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[2],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[2],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[2],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//3
+                    [
+                        {
+                            x:allX[3],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[3],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[3],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[3],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[3],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//4
+                    [
+                        {
+                            x:allX[4],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[4],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[4],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[4],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[4],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//5
+                    [
+                        {
+                            x:allX[5],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[5],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[5],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[5],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[5],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//6
+                    [
+                        {
+                            x:allX[6],
+                            y:allY[0],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[6],
+                            y:allY[1],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[6],
+                            y:allY[2],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[6],
+                            y:allY[3],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:allX[6],
+                            y:allY[4],
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//7
+                ];
+
+
+                var allEnemies=[
+                    [
+                        {
+                            x:50,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//1
+                    [
+                        {
+                            x:125,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//2
+                    [
+                        {
+                            x:200,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//3
+                    [
+                        {
+                            x:275,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//4
+                    [
+                        {
+                            x:350,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//5
+                    [
+                        {
+                            x:425,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//6
+                    [
+                        {
+                            x:500,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//7
+                ];
+
+                var totCol = 7;
+                var totRow = 5;
+                var enemyDir = 1;
+                var totEnemies=35;
+
+                var num=0;
+                var rate=60;
+                var level=1;
+
+                canvas.focus();
+
+                canvas.addEventListener("keydown", function(event){
+                    if(event.keyCode == 65 || event.keyCode == 100 || event.keyCode == 37){//Left
+                        Player.dir=1;
+                    }
+                    else if(event.keyCode == 68 || event.keyCode == 102 || event.keyCode == 39){//Right
+                        Player.dir=-1;
+                    }
+                    else if(event.keyCode == 32){
+                        if(Player.lazer){
+                            lazer.x=(Player.x+(Player.w/2));
+                            lazer.y=Player.y;
+                            Player.lazer=false;
+                        }
+                    }
+                });
+
+                canvas.addEventListener("keyup", function(event){
+                    if(event.keyCode == 65 || event.keyCode == 100 || event.keyCode == 37){//Left
+                        Player.dir=0;
+                    }
+                    else if(event.keyCode == 68 || event.keyCode == 102 || event.keyCode == 39){//Right
+                        Player.dir=0;
+                    }
+                });
+
+                var die = function(){
+                    Player = {};
+                    var transition = Object.assign({}, OGPlayer);
+                    Object.assign(Player, transition);
+                    level=1;
+                    allEnemies=[
+                    [
+                        {
+                            x:50,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//1
+                    [
+                        {
+                            x:125,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//2
+                    [
+                        {
+                            x:200,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//3
+                    [
+                        {
+                            x:275,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//4
+                    [
+                        {
+                            x:350,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//5
+                    [
+                        {
+                            x:425,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//6
+                    [
+                        {
+                            x:500,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//7
+                ];
+                    rate=60;
+                    totEnemies=35;
+                    alert("Ha perdido");
+                }
+
+                var win = function(){
+                    Player = {};
+                    var transition = Object.assign({}, OGPlayer);
+                    Object.assign(Player, transition);
+                    level++;
+                    allEnemies=[
+                    [
+                        {
+                            x:50,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:50,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//1
+                    [
+                        {
+                            x:125,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:125,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//2
+                    [
+                        {
+                            x:200,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:200,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//3
+                    [
+                        {
+                            x:275,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:275,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//4
+                    [
+                        {
+                            x:350,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:350,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//5
+                    [
+                        {
+                            x:425,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:425,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//6
+                    [
+                        {
+                            x:500,
+                            y:250,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:200,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:150,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:100,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        },
+                        {
+                            x:500,
+                            y:50,
+                            w:wid,
+                            h:hei,
+                            alive: true
+                        }
+                    ],//7
+                ];
+                    rate=60;
+                    totEnemies=35;
+
+                    alert("You won!!!");
+                }
+
+                var update = function(){
+                    document.getElementById('score').innerHTML=level;
+
+                    if(!Player.lazer){
+                        lazer.y -= 10;
+                    }
+                    if(lazer.y <= -lazer.h){
+                        Player.lazer = true;
+                    }
+                    if(Player.dir===1){
+                        if(Player.x>0){
+                            Player.x -= Player.w/2;
+                        }
+                    }
+                    if(Player.dir===-1){
+                        if(Player.x < canv_wid-Player.w){
+                            Player.x += Player.w/2;
+                        }
+                    }
+                    var x = 0;
+                    var y = 0;
+                    let fixBool = true;
+                    for (x=0;x<totCol;x++){
+                        for(y=0;y<totRow;y++){
+                            if(allEnemies[x][y].alive){
+                                if((Player.x>=allEnemies[x][y].x && Player.x<=(allEnemies[x][y].x+allEnemies[x][y].w)) || 
+                                (Player.x+Player.w)>=allEnemies[x][y].x && (Player.x+Player.w)<=(allEnemies[x][y].x+allEnemies[x][y].w)){
+                                    if((Player.y>allEnemies[x][y].y && Player.y<(allEnemies[x][y].y+allEnemies[x][y].h)) || 
+                                    (Player.y+Player.h)>=allEnemies[x][y].y && (Player.y+Player.h)<=(allEnemies[x][y].y+allEnemies[x][y].h)){
+                                        die();
+                                    }
+                                }
+                            }
+                            if(allEnemies[x][y].y>=canv_hei && allEnemies[x][y].alive){
+                                die();
+                            }
+                            if(!Player.lazer){
+                                if((lazer.x>=allEnemies[x][y].x && lazer.x<=(allEnemies[x][y].x+allEnemies[x][y].w)) || 
+                                (lazer.x+lazer.w)>=allEnemies[x][y].x && (lazer.x+lazer.w)<=(allEnemies[x][y].x+allEnemies[x][y].w)){
+                                    if((lazer.y>=allEnemies[x][y].y && lazer.y<=(allEnemies[x][y].y+allEnemies[x][y].h)) || 
+                                    (lazer.y+lazer.h)>=allEnemies[x][y].y && (lazer.y+lazer.h)<=(allEnemies[x][y].y+allEnemies[x][y].h)){
+                                        if(allEnemies[x][y].alive){
+                                            allEnemies[x][y].alive=false;
+                                            Player.lazer=true;
+                                            totEnemies--;
+                                        }
+                                    }
+                                }
+                            }
+                            if(totEnemies===0){
+                                win();
+                            }
+                            if(enemyDir===1){
+                                fixBool=true;
+                            }else{
+                                fixBool=false;
+                            }
+                            if(allEnemies[x][y].x===(canv_wid-allEnemies[x][y].w) && allEnemies[x][y].alive){
+                                if(fixBool){
+                                    enemyDir = -1;
+                                    var w = 0;
+                                    var v = 0;
+                                    for (w=0;w<totCol;w++){
+                                        for(v=0;v<totRow;v++){
+                                            allEnemies[w][v].y+=hei;
+                                        }
+                                    }
+                                }
+                            }
+                            if(allEnemies[x][y].x===0 && allEnemies[x][y].alive){
+                                if(!fixBool){
+                                    enemyDir=1;
+                                    var w = 0;
+                                    var v = 0;
+                                    for (w=0;w<totCol;w++){
+                                        for(v=0;v<totRow;v++){
+                                            allEnemies[w][v].y+=hei;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if(totEnemies===20){
+                                rate=40;
+                            }
+                            if(totEnemies===5){
+                                rate=20;
+                            }
+                            if(totEnemies===3){
+                                rate=15;
+                            }
+                            if(totEnemies===2){
+                                rate=10;
+                            }
+                            if(totEnemies===1){
+                                rate=5;
+                            }
+                            if(enemyDir===1 && num%rate===0){
+                                allEnemies[x][y].x+=allEnemies[x][y].w;
+                            }
+                            if(enemyDir===-1 && num%rate===0){
+                                allEnemies[x][y].x-=allEnemies[x][y].w;
+                            }
+
+                        }
+                    }
+
+                };
+
+                var draw = function(){
+                    ctx.clearRect(0,0,canv_wid,canv_hei);
+                    ctx.fillStyle = "rgb(0,0,256)";
+                    ctx.fillRect(Player.x, Player.y, Player.w, Player.h);
+                    ctx.fillStyle = "rgb(256,0,0)";
+                    var x = 0;
+                    var y = 0;
+                    for (x=0;x<totCol;x++){
+                        for(y=0;y<totRow;y++){
+                            if(allEnemies[x][y].alive){
+                                ctx.fillRect(allEnemies[x][y].x, allEnemies[x][y].y, allEnemies[x][y].w, allEnemies[x][y].h);
+                            }
+                        }
+                    }
+                    if(!Player.lazer){
+                        ctx.fillStyle = "rgb(0,0,256)";
+                        ctx.fillRect(lazer.x, lazer.y, lazer.w, lazer.h);
+                    }
+                };
+
+                function sleep(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+
+                var frame = function(){
+                    draw();
+                    update();
+                    num++;
+                    window.requestAnimationFrame(frame);
+                };
+
+                frame();
+                };
+
+        </script>
+    </body>
+</html>
